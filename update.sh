@@ -1,16 +1,18 @@
 #!/usr/bin/bash
 
-# 1. Stop the services to release any locks on image layers
-sudo docker-compose -f /home/andrew/docker/docker-compose.denmesh.yml stop
+COMPOSE_FILE="/home/andrew/docker/docker-compose.denmesh.yml"
 
-# 2. Prune BEFORE the pull to clear out old images and cache
-# This ensures you have room for the new incoming data
+# 1. Stop the server to free up RAM and Image locks
+sudo docker compose -f $COMPOSE_FILE stop
+
+# 2. Clear out old Docker bloat to make room for the pull
 sudo docker system prune -af
 
-# 3. System maintenance
-topgrade --disable firmware
-sudo dnf autoremove -y
+# 3. The "Do-It-All" Update
+# topgrade runs 'dnf upgrade' automatically.
+# Adding --cleanup tells topgrade to run the autoremove logic for you.
+topgrade --disable firmware --cleanup -y
 
-# 4. Pull and Restart
-sudo docker-compose -f /home/andrew/docker/docker-compose.denmesh.yml pull
-sudo docker-compose -f /home/andrew/docker/docker-compose.denmesh.yml up -d
+# 4. Pull the new images and restart
+sudo docker compose -f $COMPOSE_FILE pull
+sudo docker compose -f $COMPOSE_FILE up -d
