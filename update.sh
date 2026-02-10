@@ -9,9 +9,11 @@ sudo docker compose -f $COMPOSE_FILE stop
 sudo docker system prune -af
 
 # 3. The "Do-It-All" Update
-# topgrade runs 'dnf upgrade' automatically.
+# topgrade runs 'dnf upgrade' automatically. 
+# Edit: It's 'dnf update -y' !!! you're thinking of Debian based distros that use apt-get, e.g. 'apt-get update', and then 'apt-get upgrade' to actually do the update!
 # Adding --cleanup tells topgrade to run the autoremove logic for you.
-topgrade --disable firmware --cleanup -y
+# Edit: You are not supposed to run 'dnf autoremove' everytime after running 'dnf update'
+topgrade --disable firmware
 
 # 4. Pull the new images and restart
 sudo docker compose -f $COMPOSE_FILE pull
