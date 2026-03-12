@@ -10,11 +10,17 @@ sudo docker system prune -af
 
 # 3. The "Do-It-All" Update
 # topgrade runs 'dnf upgrade' automatically. 
-# Edit: It's 'dnf update -y' !!! you're thinking of Debian based distros that use apt-get, e.g. 'apt-get update', and then 'apt-get upgrade' to actually do the update!
+# --Edit: It's 'dnf update -y' --- you're thinking of Debian based distros that use apt-get, e.g. 'apt-get update', and then 'apt-get upgrade' to actually do the update
+sudo dnf update -y
 # Adding --cleanup tells topgrade to run the autoremove logic for you.
-# Edit: You are not supposed to run 'dnf autoremove' everytime after running 'dnf update'
+# --Edit: You are not supposed to run 'dnf autoremove' everytime after running 'dnf update'
 topgrade --disable firmware
 
 # 4. Pull the new images and restart
 sudo docker compose -f $COMPOSE_FILE pull
 sudo docker compose -f $COMPOSE_FILE up -d
+
+# 5. Make sure the Postfix/Dovecot/mariaDB services are running
+sudo systemctl restart postfix
+sudo systemctl restart dovecot
+sudo systemctl restart mariaDB
